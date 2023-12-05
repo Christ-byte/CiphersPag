@@ -82,14 +82,14 @@ body{
     width: 250px;
     height: 100%;
     overflow: hidden;
-    padding: 15px 15px;
+    padding: 20px 15px;
     background-color: var(--color-barra-lateral);
     transition: width 0.5s ease,background-color 0.3s ease,left 0.5s ease;
     z-index: 50;
 }
 
 .mini-barra-lateral{
-    width: 95px;
+    width: 90px;
 }
 .barra-lateral span{
     width: 100px;
