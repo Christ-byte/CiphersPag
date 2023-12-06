@@ -1,45 +1,49 @@
-const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function cifrar(mensaje, clave) {    
+    textoCifrado = "";
+    for (i = 0; i < mensaje.length; i++) { 
+        if (i < clave.length) {
+            textoCifrado += String.fromCharCode((((mensaje.charCodeAt(i) - 97) + (clave.charCodeAt(i) - 97) + 26) % 26) + 97); 
+        } else {
+            textoCifrado += String.fromCharCode((((mensaje.charCodeAt(i) - 97) + (mensaje.charCodeAt(i - clave.length) - 97) + 26) % 26) + 97);
+        }    
+    } 
+    return textoCifrado; 
+}
 
-        function cifrar() {
-            const texto = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-            const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
-            const resultado = ejecutarAlgoritmo(texto, clave, true);
-
-            document.getElementById('result').innerText = resultado;
+function descifrar(mensaje, clave) {    
+    textoPlano = "";
+    for (i = 0; i < mensaje.length; i++) { 
+        if (i < clave.length) {
+            textoPlano += String.fromCharCode((((mensaje.charCodeAt(i) - 97) - (clave.charCodeAt(i) - 97) + 26) % 26) + 97); 
+        } else {
+            textoPlano += String.fromCharCode((((mensaje.charCodeAt(i) - 97) - (mensaje.charCodeAt(i - clave.length) - 97) + 26) % 26) + 97);
         }
+    } 
+    return textoPlano; 
+}
 
-        function descifrar() {
-            const texto = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-            const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
-            const resultado = ejecutarAlgoritmo(texto, clave, false);
+function funcionBotonCifrar() {
+    var mensaje = document.getElementById('inputMensaje').value.toLowerCase().replace(/[^a-z]/g, ""); 
+    var claveIngresada = document.getElementById('claveIngresada').value.toLowerCase().replace(/[^a-z]/g, "");
+    
+    if (claveIngresada == "" || mensaje == "") {
+        alert("Error");
+        return;
+    }
 
-            document.getElementById('result').innerText = resultado;
-        }
+    var resultado = cifrar(mensaje, claveIngresada);
+    document.getElementById("resultado").value = resultado.toUpperCase();
+}
 
-        function prepararTexto(texto) {
-            return texto.replace(/[^A-Z]/g, '');
-        }
+function funcionBotonDescifrar() {
+    var mensaje = document.getElementById('inputMensaje').value.toLowerCase().replace(/[^a-z]/g, ""); 
+    var claveIngresada = document.getElementById('claveIngresada').value.toLowerCase().replace(/[^a-z]/g, "");
 
-        function ejecutarAlgoritmo(texto, clave, cifrar) {
-            let resultado = "";
-            let claveExtendida = clave;
-            
-            while (claveExtendida.length < texto.length) {
-                claveExtendida += clave;
-            }
+    if (claveIngresada == "" || mensaje == "") {
+        alert("Error");
+        return;
+    }
 
-            for (let i = 0; i < texto.length; i++) {
-                const letraTexto = texto[i];
-                const letraClave = claveExtendida[i];
-                const desplazamiento = cifrar ? alfabeto.indexOf(letraClave) : alfabeto.length - alfabeto.indexOf(letraClave);
-
-                const indiceTexto = alfabeto.indexOf(letraTexto);
-                if (indiceTexto !== -1) {
-                    const nuevoIndice = (indiceTexto + desplazamiento) % alfabeto.length;
-                    resultado += alfabeto[nuevoIndice];
-                } else {
-                    resultado += letraTexto;
-                }
-            }
-            return resultado;
-        }
+    var resultado = descifrar(mensaje, claveIngresada);
+    document.getElementById("resultado").value = resultado.toUpperCase();
+}

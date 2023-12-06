@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cifrado Cesar - CipherUTP</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/CipherStyle.css">
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
 </script>
@@ -29,19 +30,16 @@
 
         <section>
             <h2>Texto Original</h2>
-            <input type="text" id="plainText" placeholder="Ingrese el texto">
+            <input type="text" id="inputMensaje" placeholder="Ingrese el texto">
 
         </section>
-        <section>
-            <h2>KEY</h2>
-            <input type="number" id="base" min="2" max="36" value="16">
-        <section>
+       
             <h2>Texto Cifrado</h2>
-            <p id="cipherText"></p>
-            <p id="decryptedText"></p>
+            <textarea id="resultado" rows="4" cols="50" readonly></textarea>
+            <!-- <p id="decryptedText"></p> -->
         </section>
-        <button onclick="encrypt()">Encrypt</button>
-        <button onclick="decrypt()">Decrypt</button>
+        <button onclick="funcionBotonCifrar()">Encrypt</button>
+        <!-- <button onclick="decrypt()">Decrypt</button> -->
       
 
         

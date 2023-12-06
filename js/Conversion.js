@@ -1,45 +1,33 @@
-function doConversion(plainText, base) {
-    let cipherText = '';
+function cifrar(textoPlano)
+{ 
+    return btoa(textoPlano);
+}
 
-    for (let i = 0; i < plainText.length; i++) {
-        let charCode = plainText.charCodeAt(i);
+function descifrar(textoCifrado)
+{
+    return atob(textoCifrado);
+}
 
-        // Convierte el código ASCII a la base especificada
-        let convertedValue = charCode.toString(base);
+function funcionBotonCifrar(){
+    var mensaje = document.getElementById("inputMensaje").value; 
 
-        // Agrega el valor convertido al texto cifrado
-        cipherText += convertedValue + ' ';
+    if(mensaje == ""){
+      alert("Por favor, ingresa el mensaje para cifrar/descifrar.");
+      return;
     }
-
-    return cipherText.trim();  // Elimina espacios adicionales al final
+    
+    var resultado = cifrar(mensaje);
+    document.getElementById("resultado").value = resultado;
 }
 
-function doDecryption(cipherText, base) {
-    let decryptedText = '';
-
-    // Divide el texto cifrado en valores separados por espacio
-    let values = cipherText.split(' ');
-
-    for (let i = 0; i < values.length; i++) {
-        let convertedValue = parseInt(values[i], base);
-
-        // Convierte el valor de vuelta a un carácter y agrega al texto descifrado
-        decryptedText += String.fromCharCode(convertedValue);
+function funcionBotonDescifrar(){
+    var mensaje = document.getElementById("inputMensaje").value;
+  
+    if(mensaje == ""){
+      alert("Por favor, ingresa el mensaje para cifrar/descifrar.");
+      return;
     }
-
-    return decryptedText;
-}
-
-function encrypt() {
-    let plainText = document.getElementById('plainText').value;
-    let base = parseInt(document.getElementById('base').value);
-    let cipherText = doConversion(plainText, base);
-    document.getElementById('cipherText').innerHTML =  cipherText;
-}
-
-function decrypt() {
-    let cipherText = document.getElementById('cipherText').innerHTML;
-    let base = parseInt(document.getElementById('base').value);
-    let decryptedText = doDecryption(cipherText.substring(13), base);
-    document.getElementById('decryptedText').innerHTML =  decryptedText;
-}
+  
+    var resultado = descifrar(mensaje);
+    document.getElementById("resultado").value = resultado;
+} 

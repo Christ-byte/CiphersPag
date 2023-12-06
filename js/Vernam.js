@@ -1,41 +1,85 @@
-function cifrar() {
-    const texto = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-    const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
+const alfabeto = "abcdefghijklmnopqrstuvwxyz".split("");
+let salida = "";
+for (var i = 0; i < this; i++) {
+    salida += alfabeto[Math.floor(Math.random() * alfabeto.length)];
+}
 
-    if (texto.length !== clave.length) {
-        alert('La longitud del texto y la clave deben ser iguales.');
+var codificarMensaje = function (mensaje, claveIngresada) {
+
+    var salida = "";
+    let textoNumerico = [];
+    let claveNumerica = [];
+
+    for (let i of mensaje) {
+        textoNumerico.push(alfabeto.indexOf(i.toLowerCase()));
+    }
+
+    for (let i of claveIngresada) {
+        claveNumerica.push(alfabeto.indexOf(i.toLowerCase()));
+    }
+
+    for (let i in textoNumerico) {
+        salida += alfabeto[(textoNumerico[i] + claveNumerica[i]) % 26];
+    }
+
+    return salida;
+}
+
+var decodificarMensaje = function (mensaje, claveIngresada) {
+    var salida = "";
+    let textoNumerico = [];
+    let claveNumerica = [];
+
+    for (let i of mensaje) {
+        textoNumerico.push(alfabeto.indexOf(i.toLowerCase()));
+    }
+
+    for (let i of claveIngresada) {
+        claveNumerica.push(alfabeto.indexOf(i.toLowerCase()));
+    }
+
+    let out = "";
+    for (let i in textoNumerico) {
+        salida += alfabeto[(textoNumerico[i] - claveNumerica[i]) < 0 ? 26 + (textoNumerico[i] - claveNumerica[i]) : (textoNumerico[i] - claveNumerica[i]) % 26];
+    }
+
+    return salida;
+}
+
+
+function funcionBotonCifrar() {
+    var claveIngresada = document.getElementById('claveIngresada').value;
+    var mensaje = document.getElementById("inputMensaje").value;
+
+    if (claveIngresada == "" || mensaje == "") {
+        alert("Por favor, ingrese clave y mensaje para cifrar/descifrar.");
         return;
     }
 
-    const resultado = ejecutarAlgoritmo(texto, clave);
-    document.getElementById('result').innerText = resultado;
-}
-
-function descifrar() {
-    const textoCifrado = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-    const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
-
-    if (textoCifrado.length !== clave.length) {
-        alert('La longitud del texto cifrado y la clave deben ser iguales.');
+    if (mensaje.length != claveIngresada.length) {
+        alert("El texto y la clave deben tener la misma longitud.");
         return;
     }
 
-    // Descifrado es igual al cifrado en el cifrado de Vernam
-    const resultado = ejecutarAlgoritmo(textoCifrado, clave);
-    document.getElementById('result').innerText = resultado;
+    var resultado = codificarMensaje(mensaje, claveIngresada);
+    document.getElementById("resultado").value = resultado.toUpperCase();
 }
 
-function prepararTexto(texto) {
-    return texto.replace(/[^A-Z]/g, '');
-}
 
-function ejecutarAlgoritmo(texto, clave) {
-    let resultado = "";
-    for (let i = 0; i < texto.length; i++) {
-        const charCodeTexto = texto.charCodeAt(i) - 65;  // Convertir a número entre 0 y 25
-        const charCodeClave = clave.charCodeAt(i) - 65;  // Convertir a número entre 0 y 25
-        const nuevoCharCode = (charCodeTexto ^ charCodeClave) + 65;  // Operación XOR y revertir la conversión
-        resultado += String.fromCharCode(nuevoCharCode);
+function funcionBotonDescifrar() {
+    var claveIngresada = document.getElementById('claveIngresada').value;
+    var mensaje = document.getElementById("inputMensaje").value;
+
+    if (claveIngresada == "" || mensaje == "") {
+        alert("Por favor, ingrese clave y mensaje para cifrar/descifrar.");
+        return;
     }
-    return resultado;
+
+    if (mensaje.length != claveIngresada.length) {
+        alert("El texto y la clave deben tener la misma longitud.");
+        return;
+    }
+
+    var resultado = decodificarMensaje(mensaje, claveIngresada);
+    document.getElementById("resultado").value = resultado.toUpperCase();
 }

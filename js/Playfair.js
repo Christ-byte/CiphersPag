@@ -1,106 +1,132 @@
-const alfabeto = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
-let matrizPlayfair = [];
 
-function generarMatrizPlayfair(clave) {
-    // Inicializar la matrizPlayfair con la clave
-    matrizPlayfair = [];
-    const claveSinDuplicados = [...new Set(clave.replace(/J/g, 'I'))];
-    const alfabetoRestante = alfabeto.split('').filter(char => !claveSinDuplicados.includes(char));
-
-    // Construir la primera parte de la matriz con la clave
-    for (let i = 0; i < claveSinDuplicados.length; i++) {
-        matrizPlayfair.push(claveSinDuplicados.slice(i * 5, (i + 1) * 5));
-    }
-
-    // Completar la matriz con el alfabeto restante
-    let index = 0;
-    for (let i = claveSinDuplicados.length; i < 5; i++) {
-        matrizPlayfair.push(alfabetoRestante.slice(index, index + 5));
-        index += 5;
-    }
+function toLowerCase(plain) {
+    return plain.toLowerCase();
 }
 
-function cifrar() {
-    const texto = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-    const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
-    generarMatrizPlayfair(clave);
 
-    let resultado = "";
+function removeSpaces(plain) {
+    return plain.replace(/\s/g, '');
+}
 
-    for (let i = 0; i < texto.length; i += 2) {
-        const parDeLetras = texto.substr(i, 2);
-        const cifrado = cifrarParDeLetras(parDeLetras);
-        resultado += cifrado;
+
+function generateKeyTable(key) {
+    let keyT = [];
+    let dicty = Array(26).fill(0);
+
+    for (let i = 0; i < key.length; i++) {
+        if (key[i] !== 'j') {
+            dicty[key.charCodeAt(i) - 97] = 2;
+        }
     }
 
-    document.getElementById('result').innerText = resultado;
-}
+    dicty['j'.charCodeAt(0) - 97] = 1;
 
-function descifrar() {
-    const texto = prepararTexto(document.getElementById('inputText').value.toUpperCase());
-    const clave = prepararTexto(document.getElementById('key').value.toUpperCase());
-    generarMatrizPlayfair(clave);
-
-    let resultado = "";
-
-    for (let i = 0; i < texto.length; i += 2) {
-        const parDeLetras = texto.substr(i, 2);
-        const descifrado = descifrarParDeLetras(parDeLetras);
-        resultado += descifrado;
-    }
-
-    document.getElementById('result').innerText = resultado;
-}
-
-function prepararTexto(texto) {
-    
-    return texto.replace(/[^A-Z]/g, '').replace(/J/g, 'I');
-}
-
-function encontrarPosicion(letra) {
-    for (let i = 0; i < matrizPlayfair.length; i++) {
-        for (let j = 0; j < 5; j++) {
-            if (matrizPlayfair[i][j] === letra) {
-                return { fila: i, columna: j };
+    let i = 0, j = 0;
+    for (let k = 0; k < key.length; k++) {
+        if (dicty[key.charCodeAt(k) - 97] === 2) {
+            dicty[key.charCodeAt(k) - 97] -= 1;
+            if (!keyT[i]) keyT[i] = [];
+            keyT[i][j] = key[k];
+            j++;
+            if (j === 5) {
+                i++;
+                j = 0;
             }
         }
     }
-}
 
-function cifrarParDeLetras(parDeLetras) {
-    const pos1 = encontrarPosicion(parDeLetras[0]);
-    const pos2 = encontrarPosicion(parDeLetras[1]);
-
-    if (pos1 && pos2) {
-        if (pos1.fila === pos2.fila) {
-          
-            return matrizPlayfair[pos1.fila][(pos1.columna + 1) % 5] + matrizPlayfair[pos2.fila][(pos2.columna + 1) % 5];
-        } else if (pos1.columna === pos2.columna) {
-            
-            return matrizPlayfair[(pos1.fila + 1) % 5][pos1.columna] + matrizPlayfair[(pos2.fila + 1) % 5][pos2.columna];
-        } else {
-       
-            return matrizPlayfair[pos1.fila][pos2.columna] + matrizPlayfair[pos2.fila][pos1.columna];
+    for (let k = 0; k < 26; k++) {
+        if (dicty[k] === 0) {
+            if (!keyT[i]) keyT[i] = [];
+            keyT[i][j] = String.fromCharCode(k + 97);
+            j++;
+            if (j === 5) {
+                i++;
+                j = 0;
+            }
         }
-    } else {
-       
-        return parDeLetras;
     }
+
+    return keyT;
 }
 
 
-function descifrarParDeLetras(parDeLetras) {
-    const pos1 = encontrarPosicion(parDeLetras[0]);
-    const pos2 = encontrarPosicion(parDeLetras[1]);
+function search(keyT, a, b) {
+    let arr = new Array(4).fill(0);
 
-    if (pos1.fila === pos2.fila) {
-        // Misma fila, cambiar columnas
-        return matrizPlayfair[pos1.fila][(pos1.columna - 1 + 5) % 5] + matrizPlayfair[pos2.fila][(pos2.columna - 1 + 5) % 5];
-    } else if (pos1.columna === pos2.columna) {
-        // Misma columna, cambiar filas
-        return matrizPlayfair[(pos1.fila - 1 + 5) % 5][pos1.columna] + matrizPlayfair[(pos2.fila - 1 + 5) % 5][pos2.columna];
-    } else {
-        // Formar rectángulo, intercambiar columnas
-        return matrizPlayfair[pos1.fila][pos2.columna] + matrizPlayfair[pos2.fila][pos1.columna];
+    if (a === 'j') a = 'i';
+    else if (b === 'j') b = 'i';
+
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (keyT[i][j] === a) {
+                arr[0] = i;
+                arr[1] = j;
+            } else if (keyT[i][j] === b) {
+                arr[2] = i;
+                arr[3] = j;
+            }
+        }
     }
+
+    return arr;
+}
+
+
+function mod5(a) {
+    return (a % 5);
+}
+
+
+function prepare(str) {
+    if (str.length % 2 !== 0) {
+        str += 'z';
+    }
+    return str;
+}
+
+
+function encrypt(str, keyT) {
+    let result = '';
+
+    for (let i = 0; i < str.length; i += 2) {
+        let a = search(keyT, str[i], str[i + 1]);
+
+        if (a[0] === a[2]) {
+            result += keyT[a[0]][mod5(a[1] + 1)] + keyT[a[0]][mod5(a[3] + 1)];
+        } else if (a[1] === a[3]) {
+            result += keyT[mod5(a[0] + 1)][a[1]] + keyT[mod5(a[2] + 1)][a[1]];
+        } else {
+            result += keyT[a[0]][a[3]] + keyT[a[2]][a[1]];
+        }
+    }
+
+    return result;
+}
+
+function encryptByPlayfairCipher(str, key) {
+  
+    key = removeSpaces(key);
+    key = toLowerCase(key);
+
+ 
+    str = removeSpaces(str);
+    str = toLowerCase(str);
+    str = prepare(str);
+
+    let keyT = generateKeyTable(key);
+
+    return encrypt(str, keyT);
+}
+function Cifrado() {
+    
+    let inputText = document.getElementById("inputText").value;
+    let key = document.getElementById("key").value;
+    let result = document.getElementById("result");
+
+    
+    let mensajeCifrado = encryptByPlayfairCipher(inputText, key);
+
+   
+    result.value = mensajeCifrado.toUpperCase();
 }
