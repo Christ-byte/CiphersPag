@@ -217,7 +217,6 @@ var decodeMessage = function (morseCode) {
 }
 
 
-// gets the message and key entered by user and ciphers it
 function cipherButtonFunction() {
     var message = document.getElementById("inputMessage").value;
     if (message == "") {
@@ -230,7 +229,7 @@ function cipherButtonFunction() {
 
 }
 
-// gets the message and key entered by user and deciphers it
+
 function decipherButtonFunction() {
     var message = document.getElementById("inputMessage").value;
 
