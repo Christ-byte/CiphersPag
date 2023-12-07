@@ -1,49 +1,41 @@
-function cifrar(mensaje, clave) {    
-    textoCifrado = "";
-    for (i = 0; i < mensaje.length; i++) { 
-        if (i < clave.length) {
-            textoCifrado += String.fromCharCode((((mensaje.charCodeAt(i) - 97) + (clave.charCodeAt(i) - 97) + 26) % 26) + 97); 
-        } else {
-            textoCifrado += String.fromCharCode((((mensaje.charCodeAt(i) - 97) + (mensaje.charCodeAt(i - clave.length) - 97) + 26) % 26) + 97);
-        }    
+function encrypt(message, key){    
+    ciphertext="";
+    for(i=0; i<message.length; i++){ 
+        ciphertext += String.fromCharCode((((key.charCodeAt(i%key.length)-97) - (message.charCodeAt(i)-97)+26)%26)+97); 
     } 
-    return textoCifrado; 
+    return ciphertext; 
 }
 
-function descifrar(mensaje, clave) {    
-    textoPlano = "";
-    for (i = 0; i < mensaje.length; i++) { 
-        if (i < clave.length) {
-            textoPlano += String.fromCharCode((((mensaje.charCodeAt(i) - 97) - (clave.charCodeAt(i) - 97) + 26) % 26) + 97); 
-        } else {
-            textoPlano += String.fromCharCode((((mensaje.charCodeAt(i) - 97) - (mensaje.charCodeAt(i - clave.length) - 97) + 26) % 26) + 97);
-        }
+function decrypt(message, key){    
+    plaintext="";
+    for(i=0; i<message.length; i++){ 
+        plaintext += String.fromCharCode((( (key.charCodeAt(i%key.length)-97) - (message.charCodeAt(i)-97)+26)%26) + 97); 
     } 
-    return textoPlano; 
+    return plaintext; 
 }
 
-function funcionBotonCifrar() {
-    var mensaje = document.getElementById('inputMensaje').value.toLowerCase().replace(/[^a-z]/g, ""); 
-    var claveIngresada = document.getElementById('claveIngresada').value.toLowerCase().replace(/[^a-z]/g, "");
+function cipherButtonFunction(){
+    var message = document.getElementById('inputMessage').value.toLowerCase().replace(/[^a-z]/g, ""); 
+    var enteredKey = document.getElementById('enteredKey').value.toLowerCase().replace(/[^a-z]/g, "");
     
-    if (claveIngresada == "" || mensaje == "") {
-        alert("Error");
-        return;
-    }
+  if(enteredKey == "" || message == ""){
+    alert("Error");
+    return;
+  }
 
-    var resultado = cifrar(mensaje, claveIngresada);
-    document.getElementById("resultado").value = resultado.toUpperCase();
+  var result = encrypt(message, enteredKey);
+  document.getElementById("result").value = result;
 }
 
-function funcionBotonDescifrar() {
-    var mensaje = document.getElementById('inputMensaje').value.toLowerCase().replace(/[^a-z]/g, ""); 
-    var claveIngresada = document.getElementById('claveIngresada').value.toLowerCase().replace(/[^a-z]/g, "");
+function decipherButtonFunction(){
+    var message = document.getElementById('inputMessage').value.toLowerCase().replace(/[^a-z]/g, ""); 
+    var enteredKey = document.getElementById('enteredKey').value.toLowerCase().replace(/[^a-z]/g, "");
 
-    if (claveIngresada == "" || mensaje == "") {
-        alert("Error");
-        return;
-    }
+  if(enteredKey == "" || message == ""){
+    alert("Error");
+    return;
+  }
 
-    var resultado = descifrar(mensaje, claveIngresada);
-    document.getElementById("resultado").value = resultado.toUpperCase();;
+  var result = decrypt(message, enteredKey);
+  document.getElementById("result").value = result;
 }
