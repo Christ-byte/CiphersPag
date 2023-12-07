@@ -52,7 +52,7 @@ var decodeMessage = function (input) {
 function cipherButtonFunction(){
   var message = document.getElementById("inputMessage").value;
   if(message == ""){
-    alert("Please enter message to de ciphered/deciphered!");
+    alert("ERROR");
     return;
   }
 
@@ -66,7 +66,7 @@ function decipherButtonFunction(){
   var message = document.getElementById("inputMessage").value;
 
   if(message == ""){
-    alert("Please enter message to de ciphered/deciphered!");
+    alert("ERROR");
     return;
   }
 
